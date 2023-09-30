@@ -1,35 +1,23 @@
-import browserSandbox from '@exact-realty/lot';
+import browserSandbox from '@exact-realty/lot/browser';
 import { createMachine } from 'xstate';
 import './App.css';
 
-async function goddag(navn) {
-  return `hejsa ${navn}`;
-}
-
-const externalMethods = {
-  createMachine,
-  goddag,
-};
+const externalMethods = { createMachine };
 const sandbox = await browserSandbox(
   `
   /* sandboxed code*/;
   module.exports={
-    hello:async (navn)=>\`Hello \${await goddag(navn)}!\`,
     getMachine:async (config)=>{
-      // fetch('https://jsonplaceholder.typicode.com/todos/1');
       const machine = await createMachine(config);
-      console.log(machine.id);
       return machine.id;
     },
   };
 `,
-  ['fetch', 'createMachine'],
+  undefined,
   externalMethods,
   undefined,
   { browserRequireWorker: true }
 );
-const result = await sandbox('hello', 'Anders');
-console.log(result);
 
 const miniMachineConfig = {
   id: 'mini',
@@ -37,22 +25,13 @@ const miniMachineConfig = {
   states: { idle: {} },
 };
 const machine = await sandbox('getMachine', miniMachineConfig);
-// console.log(machine);
+console.log(machine);
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <iframe
-          id="sandboxFrame"
-          sandbox="allow-scripts"
-          srcDoc="
-          <script>
-          // Your JavaScript code
-          console.log('Hello, Sandbox!');
-          </script>
-          "
-        ></iframe>
+        <p>Check the console</p>
       </header>
     </div>
   );
