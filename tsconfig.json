@@ -1,0 +1,47 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"composite": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"outDir": "dist",
+		"rootDir": "src",
+		"strict": true,
+		"strictNullChecks": true,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"esModuleInterop": true,
+		"skipLibCheck": false,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"lib": ["es6", "es2021.promise", "dom"],
+		"typeRoots": ["./node_modules/@types", "./@types"],
+		"paths": {
+			"@dist/*": ["./dist/*"],
+			"~/*": ["./src/*"],
+			"@test/*": ["./test/*"],
+			"~trusted/*": ["./src/trusted/*"],
+			"~untrusted/*": ["./src/untrusted/*"]
+		},
+		"plugins": [
+			{
+				"transform": "typescript-transform-paths",
+				"afterDeclarations": true
+			}
+		],
+		"declaration": true,
+		"allowJs": true,
+		"checkJs": false
+	},
+	"ts-node": {
+		"experimentalResolver": true
+	},
+	"references": [
+		{ "path": "src/trusted" },
+		{ "path": "src/types" },
+		{ "path": "src/untrusted" }
+	],
+	"include": ["src/*", "src/exports/**/*"],
+	"exclude": ["node_modules", "build", "dist"],
+	"types": ["node"]
+}

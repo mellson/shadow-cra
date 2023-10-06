@@ -1,70 +1,125 @@
-# Getting Started with Create React App
+# 🏜️ @exact-realty/lot 🏖️
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ecmascript-sandbox&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ecmascript-sandbox)
+ [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ecmascript-sandbox&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ecmascript-sandbox)
+ [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ecmascript-sandbox&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ecmascript-sandbox)
+ [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ecmascript-sandbox&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ecmascript-sandbox)
+ [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Exact-Realty_ecmascript-sandbox&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Exact-Realty_ecmascript-sandbox)
+ ![NPM Downloads](https://img.shields.io/npm/dw/@exact-realty/lot?style=flat-square)
 
-## Available Scripts
+Welcome to `@exact-realty/lot` — the versatile ECMAScript sandbox
+you've been looking for!
 
-In the project directory, you can run:
+Our sandbox supports multiple runtimes and allows for bidirectional
+communication, ensuring you have the flexibility and security to run your code
+in various environments. 
 
-### `npm start`
+### 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Support for multiple runtimes:
+    * Browser (using an iframe with a worker inside or just an iframe)
+    * Dedicated worker (can run in the browser or with Deno)
+    * Node.js
+- Browser isolation using Content Security Policy (CSP)
+- Message passing using the `MessageEvent` class and event listeners for secure
+  communication using the structured clone algorithm
+- Hardening of global variables, including `Function` and `eval`, to prevent
+  direct code execution
+- Bidirectional communication, enabling the parent to call into the sandbox and
+  vice versa
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 💻 Installation
 
-### `npm test`
+To install, run:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```sh
+npm install "@exact-realty/lot"
+```
 
-### `npm run build`
+```sh
+yarn add "@exact-realty/lot"
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 📚 Usage
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Using our sandbox is easy! First, import the desired sandbox function, then call
+it with your code and any additional parameters. Here's an example using
+`browserSandbox`:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```js
+import { browserSandbox } from '@exact-realty/ecmascript-sandbox';
 
-### `npm run eject`
+const sandbox = await browserSandbox(`
+  /* sandboxed code*/;
+  module.exports={hello:(name)=>\`Hello, ${name}!\`}; 
+`);
+const result = await sandbox('hello', 'World');
+console.log(result); // Output: "Hello, World!"
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Our sandbox provides two interfaces:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```typescript
+export interface IPerformTask {
+  (op: string, ...args: unknown[]): Promise<unknown>;
+}
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+export interface ISandbox {
+  (
+    script: string,
+    allowedGlobals?: string[] | undefined | null,
+    externalMethods?: Record<string, unknown> | null,
+    abort?: AbortSignal,
+    options?: TSandboxOptions,
+  ): Promise<IPerformTask>;
+}
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+export type TSandboxOptions = {
+	browserRequireWorker?: boolean;
+	workerType?: WorkerOptions['type'];
+}
+```
 
-## Learn More
+`ISandbox` is an interface for the `browserSandbox`, `nodejsSandbox` and
+`workerSandbox` functions. It takes a string `script` representing the code to
+be sandboxed, an optional array of allowed global variables `allowedGlobals`, an
+optional object of external methods `externalMethods`, and an optional
+AbortSignal `abort`. It returns a promise that resolves to an implementation of
+`IPerformTask`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+`IPerformTask` is an interface for the result of the various sandbox function.
+It takes a string `op` representing the function name and a list of arguments,
+and it returns a promise that resolves to the result of the task.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The script to be sandboxed, `script`, must expose an object in `module.exports`
+with a dictionary of the different functions that can be called from outside.
+The type of `module.exports` is `Record<string, typeof Function.prototype>`.
 
-### Code Splitting
+### 🤝 Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+We welcome any contributions and feedback! Please feel free to submit pull
+requests, bug reports or feature requests to our GitHub repository.
 
-### Analyzing the Bundle Size
+### ❗️ Disclaimer
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+⚠️ Please note that even though we have implemented several security measures,
+it's important to understand that sandbox escapes are always a possibility.
+Running untrusted code in Node.js is especially risky due to its inherent
+platform limitations. Our sandbox relies on `node:vm`, which was not designed
+for running untrusted code.
 
-### Making a Progressive Web App
+To mitigate these risks, we strongly recommend taking a security-in-depth
+approach and relying on additional security mechanisms such as process
+isolation, `seccomp(2)`, `pledge(2)`, `ProcessSystemCallDisablePolicy` and
+SELinux, to name a few. Where feasible, we also recommend static code analysis
+and code reviews, as well as adequate auditing and logging.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Note that the sandbox does not prevent denial-of-service attacks such as
+infinite loops or memory exhaustion. It's important to take appropriate measures
+to prevent these types of attacks, such as setting resource limits or using
+timeouts.
 
-### Advanced Configuration
+### 📜 License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is released under the ISC license. Check out the `LICENSE` file for
+more information.
