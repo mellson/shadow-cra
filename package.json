@@ -1,186 +1,46 @@
 {
-	"name": "@exact-realty/lot",
-	"version": "0.0.18",
-	"description": "Sandbox for isolating ECMAScript code",
-	"main": "dist/index.js",
-	"module": "./dist/index.mjs",
-	"exports": {
-		".": {
-			"browser": {
-				"types": "./dist/exports/browser.d.ts",
-				"amd": "./dist/exports/browser.js",
-				"import": "./dist/exports/browser.mjs",
-				"require": "./dist/exports/browser.cjs",
-				"default": "./dist/exports/browser.mjs"
-			},
-			"browser-window": {
-				"types": "./dist/exports/browser-window.d.ts",
-				"amd": "./dist/exports/browser-window.js",
-				"import": "./dist/exports/browser-window.mjs",
-				"require": "./dist/exports/browser-window.cjs",
-				"default": "./dist/exports/browser-window.mjs"
-			},
-			"browser-worker": {
-				"types": "./dist/exports/browser-window.d.ts",
-				"amd": "./dist/exports/browser-window.js",
-				"import": "./dist/exports/browser-window.mjs",
-				"require": "./dist/exports/browser-window.cjs",
-				"default": "./dist/exports/browser-window.mjs"
-			},
-			"deno": {
-				"types": "./dist/exports/worker.d.ts",
-				"default": "./dist/exports/worker.mjs"
-			},
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.mjs"
-			},
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			}
-		},
-		"./bare": {
-			"amd": {
-				"types": "./dist/exports/bare.d.ts",
-				"default": "./dist/exports/bare.js"
-			},
-			"import": {
-				"types": "./dist/exports/bare.d.ts",
-				"default": "./dist/exports/bare.mjs"
-			},
-			"require": {
-				"types": "./dist/exports/bare.d.ts",
-				"default": "./dist/exports/bare.cjs"
-			}
-		},
-		"./browser": {
-			"amd": {
-				"types": "./dist/exports/browser.d.ts",
-				"default": "./dist/exports/browser.js"
-			},
-			"import": {
-				"types": "./dist/exports/browser.d.ts",
-				"default": "./dist/exports/browser.mjs"
-			},
-			"require": {
-				"types": "./dist/exports/browser.d.ts",
-				"default": "./dist/exports/browser.cjs"
-			}
-		},
-		"./browser-window": {
-			"amd": {
-				"types": "./dist/exports/browser-window.d.ts",
-				"default": "./dist/exports/browser-window.js"
-			},
-			"import": {
-				"types": "./dist/exports/browser-window.d.ts",
-				"default": "./dist/exports/browser-window.mjs"
-			},
-			"require": {
-				"types": "./dist/exports/browser-window.d.ts",
-				"default": "./dist/exports/browser-window.cjs"
-			}
-		},
-		"./browser-worker": {
-			"amd": {
-				"types": "./dist/exports/browser-worker.d.ts",
-				"default": "./dist/exports/browser-worker.js"
-			},
-			"import": {
-				"types": "./dist/exports/browser-worker.d.ts",
-				"default": "./dist/exports/browser-worker.mjs"
-			},
-			"require": {
-				"types": "./dist/exports/browser-worker.d.ts",
-				"default": "./dist/exports/browser-worker.cjs"
-			}
-		},
-		"./nodejs": {
-			"import": {
-				"types": "./dist/exports/nodejs.d.ts",
-				"default": "./dist/exports/nodejs.mjs"
-			},
-			"require": {
-				"types": "./dist/exports/nodejs.d.ts",
-				"default": "./dist/exports/nodejs.cjs"
-			}
-		},
-		"./worker": {
-			"amd": {
-				"types": "./dist/exports/browser.d.ts",
-				"default": "./dist/exports/worker.js"
-			},
-			"import": {
-				"types": "./dist/exports/worker.d.ts",
-				"default": "./dist/exports/worker.mjs"
-			},
-			"require": {
-				"types": "./dist/exports/worker.d.ts",
-				"default": "./dist/exports/worker.cjs"
-			}
-		}
-	},
-	"files": [
-		"dist/**/*"
-	],
-	"scripts": {
-		"lint": "eslint . --ext .js,.jsx,.ts,.tsx,.json",
-		"lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.json --fix",
-		"ts:declaration": "tspc --build --emitDeclarationOnly --declarationMap --declaration",
-		"build": "npm run ts:declaration && node esbuild.mjs",
-		"test:unit": "nyc mocha src/**/*.spec.ts",
-		"test:e2e": "mocha test/**/*.spec.ts",
-		"test": "npm run test:unit && npm run build && npm run test:e2e",
-		"prepack": "npm run build",
-		"prepublishOnly": "npm test && npm run lint",
-		"preversion": "npm run lint",
-		"version": "npm run lint && git add -A src",
-		"postversion": "git push && git push --tags"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/Exact-Realty/lot.git"
-	},
-	"author": "Exact Realty Limited",
-	"license": "ISC",
-	"devDependencies": {
-		"@exact-realty/esbuild-plugin-inline-js": "^1.1.4",
-		"@types/mocha": "^10.0.1",
-		"@types/selenium-webdriver": "^4.1.17",
-		"@typescript-eslint/eslint-plugin": "^6.7.2",
-		"@typescript-eslint/parser": "^6.7.2",
-		"deno-types": "^1.25.0",
-		"esbuild": "^0.19.3",
-		"eslint": "^8.50.0",
-		"eslint-config-prettier": "^9.0.0",
-		"eslint-plugin-prettier": "^5.0.0",
-		"google-closure-compiler": "^20230802.0.0",
-		"mocha": "^10.2.0",
-		"nyc": "^15.1.0",
-		"prettier": "^3.0.3",
-		"selenium-webdriver": "^4.10.0 <4.11.0 || >4.11.1",
-		"ts-node": "^10.9.1",
-		"ts-patch": "^3.0.2",
-		"typescript": "^5.2.2",
-		"typescript-transform-paths": "^3.4.6"
-	},
-	"engines": {
-		"npm": ">=8.0.0",
-		"node": ">=16.0.0"
-	},
-	"keywords": [
-		"Node.js",
-		"browser",
-		"csp",
-		"deno",
-		"ecmascript",
-		"iframe",
-		"isolation",
-		"sandbox",
-		"security",
-		"vm",
-		"webworker",
-		"worker"
-	]
+  "name": "shadow-cra",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@exact-realty/lot": "^0.0.18",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4",
+    "xstate": "^4.38.2"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "sandboxed": "webpack --config webpack.sandboxed.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.2.1",
+    "webpack-cli": "^5.1.4"
+  }
 }
